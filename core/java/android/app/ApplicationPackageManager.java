@@ -820,6 +820,16 @@ public class ApplicationPackageManager extends PackageManager {
 
     @Override
     public boolean hasSystemFeature(String name, int version) {
+	String packageName = ActivityThread.currentPackageName();
+	if (packageName != null &&
+		packageName.contains("com.google.android.apps.photos") &&
+		(name.contains("PIXEL_2021_EXPERIENCE") ||
+		name.contains("PIXEL_2022_EXPERIENCE") ||
+		name.contains("PIXEL_2022_MIDYEAR_EXPERIENCE") ||
+		name.contains("PIXEL_2023_EXPERIENCE") ||
+		name.contains("PIXEL_2023_MIDYEAR_EXPERIENCE"))) {
+	    return false;
+	}
         return mHasSystemFeatureCache.query(new HasSystemFeatureQuery(name, version));
     }
 
