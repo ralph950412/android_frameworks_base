@@ -24,6 +24,20 @@ public class BcSmartspaceCardCombination extends BcSmartspaceCardSecondary {
         super(context);
     }
 
+    @Override // com.google.android.systemui.smartspace.BcSmartspaceCardSecondary
+    public final void setTextColor(int i) {
+    }
+
+    public BcSmartspaceCardCombination(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+    }
+
+    @Override // com.google.android.systemui.smartspace.BcSmartspaceCardSecondary
+    public final void resetUi() {
+        BcSmartspaceTemplateDataUtils.updateVisibility(this.mFirstSubCard, 8);
+        BcSmartspaceTemplateDataUtils.updateVisibility(this.mSecondSubCard, 8);
+    }
+
     public final boolean fillSubCard(ConstraintLayout constraintLayout, SmartspaceTarget smartspaceTarget, SmartspaceAction smartspaceAction, BcSmartspaceDataPlugin.SmartspaceEventNotifier smartspaceEventNotifier, BcSmartspaceCardLoggingInfo bcSmartspaceCardLoggingInfo) {
         boolean z;
         CharSequence charSequence;
@@ -36,7 +50,7 @@ public class BcSmartspaceCardCombination extends BcSmartspaceCardSecondary {
             Log.w("BcSmartspaceCardCombination", "No sub-card image field to update");
             return false;
         } else {
-            BcSmartSpaceUtil.setOnClickListener(constraintLayout, smartspaceTarget, smartspaceAction, smartspaceEventNotifier, "BcSmartspaceCardCombination", bcSmartspaceCardLoggingInfo, 0);
+            BcSmartSpaceUtil.setOnClickListener(constraintLayout, smartspaceTarget, smartspaceAction, smartspaceEventNotifier, "BcSmartspaceCardCombination", bcSmartspaceCardLoggingInfo);
             Drawable iconDrawable = BcSmartSpaceUtil.getIconDrawable(getContext(), smartspaceAction.getIcon());
             boolean z2 = true;
             if (iconDrawable == null) {
@@ -68,20 +82,6 @@ public class BcSmartspaceCardCombination extends BcSmartspaceCardSecondary {
             }
             return z2;
         }
-    }
-
-    @Override // com.google.android.systemui.smartspace.BcSmartspaceCardSecondary
-    public final void setTextColor(int i) {
-    }
-
-    public BcSmartspaceCardCombination(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-    }
-
-    @Override // com.google.android.systemui.smartspace.BcSmartspaceCardSecondary
-    public final void resetUi() {
-        BcSmartspaceTemplateDataUtils.updateVisibility(this.mFirstSubCard, 8);
-        BcSmartspaceTemplateDataUtils.updateVisibility(this.mSecondSubCard, 8);
     }
 
     public final void onFinishInflate() {

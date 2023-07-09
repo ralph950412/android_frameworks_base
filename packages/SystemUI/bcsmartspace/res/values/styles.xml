@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:androidprv="http://schemas.android.com/apk/prv/res/android">
+    <style name="DateWeatherText" parent="@style/EnhancedSmartspaceTextTitle">
+        <item name="android:fontFamily">google-sans-text</item>
+    </style>
     <style name="EnhancedSmartspaceTextSubtitle" parent="@style/EnhancedSmartspaceTextTitle">
         <item name="android:textSize">@dimen/enhanced_smartspace_subtitle_size</item>
         <item name="android:textColor">?android:textColorSecondary</item>

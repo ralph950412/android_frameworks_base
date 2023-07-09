@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class BcSmartspaceCard extends ConstraintLayout {
+    public final DoubleShadowIconDrawable mBaseActionIconDrawable;
     public DoubleShadowTextView mBaseActionIconSubtitleView;
     public IcuDateTextView mDateView;
     public final DoubleShadowIconDrawable mDndIconDrawable;
@@ -32,7 +33,6 @@ public class BcSmartspaceCard extends ConstraintLayout {
     public ViewGroup mExtrasGroup;
     public final DoubleShadowIconDrawable mIconDrawable;
     public int mIconTintColor;
-    public boolean mIsDreaming;
     public final DoubleShadowIconDrawable mNextAlarmIconDrawable;
     public ImageView mNextAlarmImageView;
     public TextView mNextAlarmTextView;
@@ -43,12 +43,20 @@ public class BcSmartspaceCard extends ConstraintLayout {
     public SmartspaceTarget mTarget;
     public ViewGroup mTextGroup;
     public TextView mTitleTextView;
+    public String mUiSurface;
     public int mTopPadding;
     public boolean mUsePageIndicatorUi;
     public boolean mValidSecondaryCard;
 
     public BcSmartspaceCard(Context context) {
         this(context, null);
+    }
+
+    public static int getSubcardType(SmartspaceAction smartspaceAction) {
+        if (smartspaceAction == null || smartspaceAction.getExtras() == null || smartspaceAction.getExtras().isEmpty()) {
+            return -1;
+        }
+        return smartspaceAction.getExtras().getInt("subcardType", -1);
     }
 
     public BcSmartspaceCard(Context context, AttributeSet attributeSet) {
@@ -66,8 +74,9 @@ public class BcSmartspaceCard extends ConstraintLayout {
         this.mDndImageView = null;
         this.mNextAlarmImageView = null;
         this.mNextAlarmTextView = null;
-        this.mIsDreaming = false;
+        this.mUiSurface = null;
         this.mIconDrawable = new DoubleShadowIconDrawable(context);
+        this.mBaseActionIconDrawable = new DoubleShadowIconDrawable(context);
         this.mNextAlarmIconDrawable = new DoubleShadowIconDrawable(context);
         this.mDndIconDrawable = new DoubleShadowIconDrawable(context);
     }
@@ -110,17 +119,34 @@ public class BcSmartspaceCard extends ConstraintLayout {
                 i = 8;
             }
             BcSmartspaceTemplateDataUtils.updateVisibility(viewGroup, i);
-            ViewGroup viewGroup2 = this.mSecondaryCardGroup;
-            if (viewGroup2 != null && viewGroup2.getVisibility() != 8) {
-                ViewGroup viewGroup3 = this.mTextGroup;
-                if (!isRtl()) {
-                    i2 = -1;
+            SmartspaceTarget smartspaceTarget2 = this.mTarget;
+            if (smartspaceTarget2 == null || smartspaceTarget2.getFeatureType() != 30) {
+                ViewGroup viewGroup2 = this.mSecondaryCardGroup;
+                if (viewGroup2 != null && viewGroup2.getVisibility() != 8) {
+                    ViewGroup viewGroup3 = this.mTextGroup;
+                    if (!isRtl()) {
+                        i2 = -1;
+                    }
+                    viewGroup3.setTranslationX(Interpolators.EMPHASIZED.getInterpolation(this.mDozeAmount) * this.mSecondaryCardGroup.getWidth() * i2);
+                    this.mSecondaryCardGroup.setAlpha(Math.max(0.0f, Math.min(1.0f, ((1.0f - this.mDozeAmount) * 9.0f) - 6.0f)));
+                    return;
                 }
-                viewGroup3.setTranslationX(Interpolators.EMPHASIZED.getInterpolation(this.mDozeAmount) * this.mSecondaryCardGroup.getWidth() * i2);
-                this.mSecondaryCardGroup.setAlpha(Math.max(0.0f, Math.min(1.0f, ((1.0f - this.mDozeAmount) * 9.0f) - 6.0f)));
-                return;
+                this.mTextGroup.setTranslationX(0.0f);
             }
-            this.mTextGroup.setTranslationX(0.0f);
+        }
+    }
+
+    public final void setPrimaryOnClickListener(SmartspaceTarget smartspaceTarget, SmartspaceAction smartspaceAction, BcSmartspaceCardLoggingInfo bcSmartspaceCardLoggingInfo) {
+        if (smartspaceAction != null) {
+            BcSmartSpaceUtil.setOnClickListener(this, smartspaceTarget, smartspaceAction, this.mEventNotifier, "BcSmartspaceCard", bcSmartspaceCardLoggingInfo);
+            TextView textView = this.mTitleTextView;
+            if (textView != null) {
+                BcSmartSpaceUtil.setOnClickListener(textView, smartspaceTarget, smartspaceAction, this.mEventNotifier, "BcSmartspaceCard", bcSmartspaceCardLoggingInfo);
+            }
+            TextView textView2 = this.mSubtitleTextView;
+            if (textView2 != null) {
+                BcSmartSpaceUtil.setOnClickListener(textView2, smartspaceTarget, smartspaceAction, this.mEventNotifier, "BcSmartspaceCard", bcSmartspaceCardLoggingInfo);
+            }
         }
     }
 
@@ -141,8 +167,9 @@ public class BcSmartspaceCard extends ConstraintLayout {
             this.mSecondaryCard.setTextColor(i);
         }
         this.mIconTintColor = i;
+        updateIconTint();
         if (this.mNextAlarmTextView != null) {
-            this.mNextAlarmTextView.setTextColor(i);
+            this.mNextAlarmTextView.setTextColor(this.mIconTintColor);
         }
         if (this.mNextAlarmImageView != null && this.mNextAlarmImageView.getDrawable() != null) {
             this.mNextAlarmImageView.getDrawable().setTint(this.mIconTintColor);
@@ -150,7 +177,6 @@ public class BcSmartspaceCard extends ConstraintLayout {
         if (this.mDndImageView != null && this.mDndImageView.getDrawable() != null) {
             this.mDndImageView.getDrawable().setTint(this.mIconTintColor);
         }
-        updateIconTint();
     }
 
     public final void setSubtitle(CharSequence charSequence, CharSequence charSequence2, boolean z) {
@@ -244,12 +270,21 @@ public class BcSmartspaceCard extends ConstraintLayout {
     }
 
     public final void updateIconTint() {
-        if (this.mTarget != null && this.mIconDrawable != null) {
-            boolean z = this.mTarget.getFeatureType() != 1;
-            if (z) {
-                this.mIconDrawable.setTint(this.mIconTintColor);
+        DoubleShadowIconDrawable doubleShadowIconDrawable;
+        if (this.mTarget != null && (doubleShadowIconDrawable = this.mIconDrawable) != null) {
+            if (this.mTarget.getFeatureType() != 1) {
+                doubleShadowIconDrawable.setTint(this.mIconTintColor);
             } else {
-                this.mIconDrawable.setTintList(null);
+                doubleShadowIconDrawable.setTintList(null);
+            }
+            DoubleShadowIconDrawable doubleShadowIconDrawable2 = this.mBaseActionIconDrawable;
+            if (doubleShadowIconDrawable2 == null) {
+                return;
+            }
+            if (getSubcardType(this.mTarget.getBaseAction()) != 1) {
+                doubleShadowIconDrawable2.setTint(this.mIconTintColor);
+            } else {
+                doubleShadowIconDrawable2.setTintList(null);
             }
         }
     }

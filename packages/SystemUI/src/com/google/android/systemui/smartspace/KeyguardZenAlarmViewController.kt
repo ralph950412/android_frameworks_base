@@ -11,6 +11,7 @@ import android.view.View
 import com.android.internal.annotations.VisibleForTesting
 import com.android.systemui.R
 import com.android.systemui.dagger.SysUISingleton
+import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.plugins.BcSmartspaceDataPlugin
 import com.android.systemui.statusbar.policy.NextAlarmController
 import com.android.systemui.statusbar.policy.ZenModeController
@@ -21,10 +22,12 @@ import javax.inject.Inject
 @SysUISingleton
 class KeyguardZenAlarmViewController @Inject constructor(
     val context: Context,
-    val plugin: BcSmartspaceDataPlugin,
+    val dateplugin: BcSmartspaceDataPlugin,
+    val plugin: BcSmartspaceDataPlugin2,
     val zenModeController: ZenModeController,
     val alarmManager: AlarmManager,
     val nextAlarmController: NextAlarmController,
+    val featureFlags: FeatureFlags,
     val handler: Handler
 ) {
     val alarmImage = context.getResources().getDrawable(R.drawable.ic_access_alarms_big, null)

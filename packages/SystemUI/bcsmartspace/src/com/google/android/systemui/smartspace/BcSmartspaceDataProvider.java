@@ -33,7 +33,6 @@ public final class BcSmartspaceDataProvider implements BcSmartspaceDataPlugin {
         @Override // android.view.View.OnAttachStateChangeListener
         public void onViewDetachedFromWindow(View view) {
             BcSmartspaceDataProvider.this.mViews.remove(view);
-            view.removeOnAttachStateChangeListener(this);
             BcSmartspaceDataProvider.this.mAttachListeners.forEach(listener -> {
                 listener.onViewDetachedFromWindow(view);
             });

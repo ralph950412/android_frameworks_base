@@ -90,4 +90,12 @@ public class IcuDateTextView extends DoubleShadowTextView {
             setContentDescription(format2);
         }
     }
+
+    public void setUpdatesOnAod() {
+        if (!isAttachedToWindow()) {
+            this.mUpdatesOnAod = true;
+            return;
+        }
+        throw new IllegalStateException("Must call before attaching view to window.");
+    }
 }

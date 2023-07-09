@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.android.app.viewcapture.data.ViewNode;
 import com.android.systemui.bcsmartspace.R;
 
 public final class BcSmartspaceTemplateDataUtils {
@@ -22,7 +23,7 @@ public final class BcSmartspaceTemplateDataUtils {
                 return R.layout.smartspace_head_to_head_template_card;
             case 6:
                 return R.layout.smartspace_combined_cards_template_card;
-            case 7:
+            case ViewNode.WIDTH_FIELD_NUMBER /* 7 */:
                 return R.layout.smartspace_sub_card_template_card;
             default:
                 return 0;
