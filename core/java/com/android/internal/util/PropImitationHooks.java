@@ -48,6 +48,9 @@ public class PropImitationHooks {
 
     private static final String PACKAGE_SUBSCRIPTION_RED = "com.google.android.apps.subscriptions.red";
     private static final String PACKAGE_TURBO = "com.google.android.apps.turbo";
+    private static final String PACKAGE_WALLPAPER = "com.google.android.apps.wallpaper";
+    private static final String PACKAGE_WELLBEING = "com.google.android.apps.wellbeing";
+    private static final String PACKAGE_ASI = "com.google.android.as";
     private static final String PACKAGE_VELVET = "com.google.android.googlequicksearchbox";
     private static final String PACKAGE_GBOARD = "com.google.android.inputmethod.latin";
     private static final String PACKAGE_SETUPWIZARD = "com.google.android.setupwizard";
@@ -85,7 +88,7 @@ public class PropImitationHooks {
             dlog("Setting stock fingerprint for: " + packageName);
             setPropValue("FINGERPRINT", sStockFp);
         } else if (packageName.equals(PACKAGE_SUBSCRIPTION_RED) || packageName.equals(PACKAGE_TURBO)
-                   || packageName.equals(PACKAGE_VELVET) || packageName.equals(PACKAGE_GBOARD) || packageName.equals(PACKAGE_SETUPWIZARD) || packageName.equals(PACKAGE_GMS)) {
+                   || packageName.equals(PACKAGE_VELVET) || packageName.equals(PACKAGE_GBOARD) || packageName.equals(PACKAGE_SETUPWIZARD) || packageName.equals(PACKAGE_GMS) || packageName.equals(PACKAGE_WALLPAPER) || packageName.equals(PACKAGE_WELLBEING) || packageName.equals(PACKAGE_ASI)) {
             dlog("Spoofing Pixel 7 Pro for: " + packageName);
             sP7Props.forEach((k, v) -> setPropValue(k, v));
         }
